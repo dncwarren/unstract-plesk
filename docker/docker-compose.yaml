@@ -8,6 +8,7 @@ services:
     container_name: unstract-backend
     restart: unless-stopped
     command: --migrate
+    platform: linux/amd64
     ports:
       - "8000:8000"
     env_file:
@@ -42,6 +43,7 @@ services:
     container_name: unstract-worker
     restart: unless-stopped
     entrypoint: .venv/bin/celery
+    platform: linux/amd64
     command: "-A backend worker --loglevel=info -Q celery,celery_api_deployments --autoscale=${WORKER_AUTOSCALE}"
     env_file:
       - ../backend/.env
@@ -64,6 +66,7 @@ services:
     container_name: unstract-worker-logging
     restart: unless-stopped
     entrypoint: .venv/bin/celery
+    platform: linux/amd64
     command: "-A backend worker --loglevel=info -Q celery_periodic_logs,celery_log_task_queue --autoscale=${WORKER_LOGGING_AUTOSCALE}"
     env_file:
       - ../backend/.env
@@ -82,6 +85,7 @@ services:
     container_name: unstract-worker-file-processing
     restart: unless-stopped
     entrypoint: .venv/bin/celery
+    platform: linux/amd64
     command: "-A backend.workers.file_processing worker --loglevel=info -Q file_processing,api_file_processing --autoscale=${WORKER_FILE_PROCESSING_AUTOSCALE}"
     env_file:
       - ../backend/.env
@@ -102,6 +106,7 @@ services:
     container_name: unstract-worker-file-processing-callback
     restart: unless-stopped
     entrypoint: .venv/bin/celery
+    platform: linux/amd64
     command: "-A backend.workers.file_processing_callback worker --loglevel=info -Q file_processing_callback,api_file_processing_callback --autoscale=${WORKER_FILE_PROCESSING_CALLBACK_AUTOSCALE}"
     env_file:
       - ../backend/.env
@@ -123,6 +128,7 @@ services:
     container_name: unstract-celery-flower
     restart: unless-stopped
     entrypoint: .venv/bin/celery
+    platform: linux/amd64
     command: "-A backend flower --port=5555 --purge_offline_workers=5"
     env_file:
       - ../backend/.env
@@ -148,6 +154,7 @@ services:
     container_name: unstract-celery-beat
     restart: unless-stopped
     entrypoint: .venv/bin/celery
+    platform: linux/amd64
     command: "-A backend beat --scheduler django_celery_beat.schedulers:DatabaseScheduler -l INFO"
     env_file:
       - ../backend/.env
@@ -164,6 +171,7 @@ services:
     image: unstract/frontend:${VERSION}
     container_name: unstract-frontend
     restart: unless-stopped
+    platform: linux/amd64
     ports:
       - "3000:3000"
     depends_on:
@@ -179,6 +187,7 @@ services:
     image: unstract/platform-service:${VERSION}
     container_name: unstract-platform-service
     restart: unless-stopped
+    platform: linux/amd64
     ports:
       - "3001:3001"
     env_file:
@@ -193,6 +202,7 @@ services:
     image: unstract/prompt-service:${VERSION}
     container_name: unstract-prompt-service
     restart: unless-stopped
+    platform: linux/amd64
     depends_on:
       - db
       - minio
@@ -226,6 +236,7 @@ services:
     image: unstract/runner:${VERSION}
     container_name: unstract-runner
     restart: unless-stopped
+    platform: linux/amd64
     ports:
       - 5002:5002
     env_file:
