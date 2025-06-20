@@ -220,6 +220,7 @@ services:
       - db
     labels:
       - traefik.enable=false
+    platform: linux/amd64
 
   runner:
     image: unstract/runner:${VERSION}
